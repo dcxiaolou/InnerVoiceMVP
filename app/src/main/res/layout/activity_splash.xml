@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".splash.SplashActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/welcome"/>
+
+    <com.dcxiaolou.innervoicemvp.ui.CountDownProgressBar
+        android:id="@+id/cpb_countdown"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        app:countDown_centerTextColor="#4169E1"
+        app:countDown_centerTextSize="18dp"
+        app:countDown_circleWidth="2dp"
+        app:countDown_firstColor="#778899"
+        app:countDown_isShowGradient="true"
+        app:countDown_secondColor="#00f"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--个人中心碎片界面-->
+
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dc="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/root_bg_color">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.dcxiaolou.innervoicemvp.ui.ProportionImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:src="@drawable/center_background"
+                dc:heightProportion="419"
+                dc:widthProportion="1136" />
+
+            <RelativeLayout
+                android:id="@+id/log_in_rl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/user_default_img"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/user_default_img" />
+
+                <TextView
+                    android:id="@+id/log_out"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/user_default_img"
+                    android:text="未登录"
+                    android:textColor="@color/gray"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/log_in_or_sign_in"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toEndOf="@+id/log_out"
+                    android:layout_toRightOf="@+id/log_out"
+                    android:background="@drawable/video_jump_btn_bg"
+                    android:padding="3dp"
+                    android:text="点击登录/注册"
+                    android:textColor="@color/white" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/setting" />
+
+            </RelativeLayout>
+
+        </FrameLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/attention"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/zero"
+                        android:gravity="center"
+                        android:text="我的关注"
+                        android:textColor="@color/default_text_color" />
+
+                    <TextView
+                        android:id="@+id/dynamic"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/zero"
+                        android:gravity="center"
+                        android:text="我的动态"
+                        android:textColor="@color/default_text_color" />
+
+                    <TextView
+                        android:id="@+id/fans"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/zero"
+                        android:gravity="center"
+                        android:text="我的粉丝"
+                        android:textColor="@color/default_text_color" />
+
+                    <TextView
+                        android:id="@+id/test_record"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/zero"
+                        android:gravity="center"
+                        android:text="测试记录"
+                        android:textColor="@color/default_text_color" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/account_balance"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawablePadding="5dp"
+                        android:drawableTop="@drawable/account_balance"
+                        android:gravity="center"
+                        android:text="账户余额"
+                        android:textColor="@color/default_text_color"/>
+
+                    <TextView
+                        android:id="@+id/booking_order"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/booking_order"
+                        android:gravity="center"
+                        android:text="预约订单"
+                        android:textColor="@color/default_text_color" />
+
+                    <TextView
+                        android:id="@+id/my_course"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawablePadding="2dp"
+                        android:drawableTop="@drawable/my_course"
+                        android:gravity="center"
+                        android:text="我的课程"
+                        android:textColor="@color/default_text_color" />
+
+                    <TextView
+                        android:id="@+id/article_collection"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/article_collection"
+                        android:gravity="center"
+                        android:text="文章收藏"
+                        android:textColor="@color/default_text_color" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/qaa_collection"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawablePadding="2dp"
+                        android:drawableTop="@drawable/qaa_collection"
+                        android:gravity="center"
+                        android:text="问答收藏"
+                        android:textColor="@color/default_text_color" />
+
+                    <TextView
+                        android:id="@+id/my_article"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/my_article"
+                        android:gravity="center"
+                        android:text="我的文章"
+                        android:textColor="@color/default_text_color" />
+
+                    <TextView
+                        android:id="@+id/my_qaa"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawablePadding="2dp"
+                        android:drawableTop="@drawable/my_qaa"
+                        android:gravity="center"
+                        android:text="我的问答"
+                        android:textColor="@color/default_text_color" />
+
+                    <TextView
+                        android:id="@+id/talk_record"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/talk_record"
+                        android:gravity="center"
+                        android:text="倾述记录"
+                        android:textColor="@color/default_text_color" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/white">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:drawableLeft="@drawable/setting_second"
+                    android:drawableRight="@drawable/direction_left"
+                    android:drawablePadding="10dp"
+                    android:textSize="16sp"
+                    android:text="设置"
+                    android:textColor="@color/default_text_color"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/line"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:drawableLeft="@drawable/privacy_security"
+                    android:drawableRight="@drawable/direction_left"
+                    android:drawablePadding="10dp"
+                    android:textSize="16sp"
+                    android:text="安全"
+                    android:textColor="@color/default_text_color"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/line"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:drawableLeft="@drawable/help_center"
+                    android:drawableRight="@drawable/direction_left"
+                    android:drawablePadding="10dp"
+                    android:textSize="16sp"
+                    android:text="帮助"
+                    android:textColor="@color/default_text_color"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/line"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:drawableLeft="@drawable/share"
+                    android:drawableRight="@drawable/direction_left"
+                    android:drawablePadding="10dp"
+                    android:textSize="16sp"
+                    android:text="分享"
+                    android:textColor="@color/default_text_color"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/line"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:drawableLeft="@drawable/about_our"
+                    android:drawableRight="@drawable/direction_left"
+                    android:drawablePadding="10dp"
+                    android:textSize="16sp"
+                    android:text="关于我们"
+                    android:textColor="@color/default_text_color"/>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/white">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:drawableLeft="@drawable/enter"
+                android:drawableRight="@drawable/direction_left"
+                android:drawablePadding="10dp"
+                android:textSize="16sp"
+                android:text="专家入驻"
+                android:textColor="@color/default_text_color"/>
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

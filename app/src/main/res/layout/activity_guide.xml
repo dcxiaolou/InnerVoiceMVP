@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".guide.GuideActivity"
+    android:background="@color/white">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_previous" />
+
+    <TextView
+        android:id="@+id/tv_ignore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:text="跳 过"
+        android:textColor="@color/default_text_color"
+        android:textSize="16sp"
+        android:background="@drawable/shape_corner_splash_bg"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/vp"/>
+
+    <TextView
+        android:id="@+id/tv_previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:drawableLeft="@drawable/arrow_left"
+        app:layout_constraintBottom_toBottomOf="@+id/vp"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:drawableRight="@drawable/arrow_right"
+        app:layout_constraintBottom_toBottomOf="@+id/vp"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_guide_1"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@drawable/shape_small_green_circle"
+        android:layout_marginRight="60dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/vp"/>
+
+    <TextView
+        android:id="@+id/tv_guide_2"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@drawable/shape_small_dark_gray_circle"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/vp"/>
+
+    <TextView
+        android:id="@+id/tv_guide_3"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@drawable/shape_small_dark_gray_circle"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/vp"/>
+
+    <TextView
+        android:id="@+id/tv_guide_4"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@drawable/shape_small_dark_gray_circle"
+        android:layout_marginLeft="60dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/vp"/>
+
+</android.support.constraint.ConstraintLayout>
+
