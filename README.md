@@ -1,2 +1,2 @@
 # InnerVoiceMVP
-init
+采用MVP设计模式重构
