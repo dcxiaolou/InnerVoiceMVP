@@ -20,5 +20,6 @@ public class Constants {
 
     public static final String HOMEACTIVITY_DISTINGUISH_PAGEVIEW = "HOMEACTIVITY_DISTINGUISH_PAGEVIEW";
 
+    public static final String COURSE_GUIDE_URL = "http://bmob-cdn-22224.b0.upaiyun.com/2018/11/11/03e4f6834038a54f80124fdfb9c6555a.json";
 
 }
