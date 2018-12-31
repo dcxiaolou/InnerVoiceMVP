@@ -4,6 +4,7 @@ import com.dcxiaolou.innervoicemvp.data.DataCallBack;
 import com.dcxiaolou.innervoicemvp.data.DataStore;
 import com.dcxiaolou.innervoicemvp.data.entity.CourseGuide;
 import com.dcxiaolou.innervoicemvp.mode.ReadArticleResult;
+import com.dcxiaolou.innervoicemvp.utils.Constants;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class HomePresenter implements HomeContract.Presenter {
     }
 
     @Override
-    public void getDailyBest() {
+    public void getDailyBest(String type, String skipNum) {
         mDataStore.getReadArticle(new DataCallBack<List<ReadArticleResult>>() {
             @Override
             public void onSuccess(List<ReadArticleResult> data) {
@@ -61,6 +62,7 @@ public class HomePresenter implements HomeContract.Presenter {
             public void onFail(String message) {
                 rootView.showErrorMessage(message);
             }
-        });
+        }, type, skipNum);
+
     }
 }

@@ -26,16 +26,23 @@ import com.dcxiaolou.innervoicemvp.Read.ShowReadArticleActivity;
 import com.dcxiaolou.innervoicemvp.consult.ConsultActivity;
 import com.dcxiaolou.innervoicemvp.course.ShowCourseActivity;
 import com.dcxiaolou.innervoicemvp.data.entity.CourseGuide;
+import com.dcxiaolou.innervoicemvp.data.entity.ReadArticle;
 import com.dcxiaolou.innervoicemvp.fm.ShowFMActivity;
 import com.dcxiaolou.innervoicemvp.mode.ReadArticleResult;
 import com.dcxiaolou.innervoicemvp.questionAndAnswer.ShowQuestionActivity;
-import com.dcxiaolou.innervoicemvp.text.TestActivity;
+import com.dcxiaolou.innervoicemvp.test.TestActivity;
+import com.dcxiaolou.innervoicemvp.utils.Constants;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements HomeContract.View, OnBannerListener, View.OnClickListener {
@@ -56,6 +63,15 @@ public class HomeFragment extends Fragment implements HomeContract.View, OnBanne
     //子菜单项
     private LinearLayout readLayout, courseLayout, fmLayout, questionAndAnswerLayout, consultLayout, testLayout;
 
+    private List<ReadArticleResult> readArticleResults = new ArrayList<>();
+
+    //刷新模块
+    private SmartRefreshLayout refreshLayout;
+
+    private boolean isFirstLoad = true;
+    private boolean haveMoreData = true;
+    private int skipNum = 0;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,7 +91,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, OnBanne
         mPresenter.getCourseGuides();
 
         dailyBestRv = (RecyclerView) view.findViewById(R.id.daily_best);
-        mPresenter.getDailyBest();
 
         readLayout = (LinearLayout) view.findViewById(R.id.read_layout);
         courseLayout = (LinearLayout) view.findViewById(R.id.course_layout);
@@ -84,6 +99,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, OnBanne
         consultLayout = (LinearLayout) view.findViewById(R.id.consult_linear_layout);
         testLayout = (LinearLayout) view.findViewById(R.id.test_linear_layout);
 
+        refreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smart_refresh_layout);
+
         //给子菜单项添加点击事件
         readLayout.setOnClickListener(this);
         courseLayout.setOnClickListener(this);
@@ -91,6 +108,43 @@ public class HomeFragment extends Fragment implements HomeContract.View, OnBanne
         questionAndAnswerLayout.setOnClickListener(this);
         consultLayout.setOnClickListener(this);
         testLayout.setOnClickListener(this);
+
+        //首次加载数据
+        if (isFirstLoad) {
+            refreshLayout.autoRefresh();//首次加载启动自动刷新
+            refreshLayout.finishRefresh();//结束刷新
+            isFirstLoad = false;
+        }
+
+        //刷新模块添加下拉刷新监听
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshLayout) {
+                Log.d("TAG", "setOnRefreshListener haveMoreData = " + haveMoreData);
+                if (haveMoreData) {
+                    readArticleResults.clear();
+                    // 每日精选模块 采用RecyclerView来显示
+                    mPresenter.getDailyBest(Constants.DAILY_INTRODUCE_ARTICLE_TYPE, "" + skipNum);
+                } else {
+                    Toast.makeText(getContext(), "φ(>ω<*) 暂无更新", Toast.LENGTH_SHORT).show();
+                }
+                refreshLayout.finishRefresh();
+            }
+        });
+
+        //刷新模块添加上拉加载更多模块
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshLayout) {
+                Log.d("TAG", "setOnLoadMoreListener haveMoreData = " + haveMoreData);
+                if (haveMoreData) {
+                    mPresenter.getDailyBest(Constants.DAILY_INTRODUCE_ARTICLE_TYPE, "" + skipNum);
+                } else {
+                    Toast.makeText(getContext(), "φ(>ω<*) 没有更多文章了", Toast.LENGTH_SHORT).show();
+                }
+                refreshLayout.finishLoadMore();
+            }
+        });
 
     }
 
@@ -122,7 +176,14 @@ public class HomeFragment extends Fragment implements HomeContract.View, OnBanne
     }
 
     @Override
-    public void showDailyBest(final List<ReadArticleResult> readArticleResults) {
+    public void showDailyBest(List<ReadArticleResult> data) {
+        readArticleResults.addAll(data);
+        Log.d("TAG", "readArticleResults.size() = " + readArticleResults.size());
+        Log.d("TAG", "data.size() = " + data.size());
+        if (data.size() < 5)
+            haveMoreData = false;
+        else
+            skipNum += 5;
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -134,15 +195,15 @@ public class HomeFragment extends Fragment implements HomeContract.View, OnBanne
                 dailyBestRv.setLayoutManager(manager);
                 ReadArticleAdapter readArticleAdapter = new ReadArticleAdapter(readArticleResults);
                 dailyBestRv.setAdapter(readArticleAdapter);
+                readArticleAdapter.notifyDataSetChanged();//数据改变
+                dailyBestRv.scrollToPosition(readArticleResults.size() - 5 - 1);//从新定位
             }
         });
     }
 
     @Override
     public void showErrorMessage(String message) {
-
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-
     }
 
     /*

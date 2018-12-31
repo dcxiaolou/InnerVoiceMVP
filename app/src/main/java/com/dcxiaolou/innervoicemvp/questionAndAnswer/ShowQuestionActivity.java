@@ -1,8 +1,5 @@
 package com.dcxiaolou.innervoicemvp.questionAndAnswer;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
 import com.dcxiaolou.innervoicemvp.R;
 import com.dcxiaolou.innervoicemvp.base.BaseActivity;
 

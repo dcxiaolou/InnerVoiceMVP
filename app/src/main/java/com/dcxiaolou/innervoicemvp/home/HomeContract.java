@@ -47,7 +47,7 @@ public interface HomeContract {
         /*
         * 获取每日推荐信息
         * */
-        void getDailyBest();
+        void getDailyBest(String type, String skipNum);
 
     }
 

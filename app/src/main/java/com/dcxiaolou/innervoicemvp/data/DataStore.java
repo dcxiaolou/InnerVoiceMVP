@@ -173,40 +173,43 @@ public class DataStore {
     }
 
     /*
-    * 获取每日推荐（阅读模块文章信息）信息
+    * 获取每日推荐、阅读模块文章信息
     * */
-    public void getReadArticle(final DataCallBack<List<ReadArticleResult>> callBack) {
+    public void getReadArticle(final DataCallBack<List<ReadArticleResult>> callBack, String type, String skipNum) {
         readArticleResultDataCallBack = callBack;
-        new getReadArticleTask().execute();
+        new getReadArticleTask().execute(type, skipNum);
     }
 
-    private static class getReadArticleTask extends AsyncTask<Void, Void, Void> {
+    private static class getReadArticleTask extends AsyncTask<String, Void, Void> {
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Void doInBackground(String... params) {
+            Log.d("TAG", "params[1] = " + params[1] + " params[0] = " + params[0]);
             final List<ReadArticleResult> readArticleResults = new ArrayList<>();
             BmobQuery<ReadArticle> query = new BmobQuery<>();
+            query.addQueryKeys("article");
             query.setLimit(5); // 返回5条数据
+            query.setSkip(Integer.parseInt(params[1])); //每次跳过的数据项，即分页
+            query.addWhereEqualTo("type", params[0]); //文章类型
             query.order("-createdAt");
             query.findObjects(new FindListener<ReadArticle>() {
                 @Override
                 public void done(List<ReadArticle> list, BmobException e) {
                     if (e == null) {
-                        Log.d("TAG", "dailyBestRv size = " + list.size());
+                        final int size = list.size();
+                        Log.d("TAG", "ReadArticle size = " + size);
                         BmobFile file;
                         final Gson gson = new Gson();
                         for (ReadArticle readArticle : list) {
                             file = readArticle.getBmobFile();
                             if (file != null) {
                                 String fileUrl = file.getUrl();
-                                //String fileName = file.getFilename();
-                                //Log.d(TAG, fileName);
                                 // 使用okhttp获取相应得文章
                                 OkHttpClient client = new OkHttpClient();
                                 Request request = new Request.Builder().url(fileUrl).build();
                                 client.newCall(request).enqueue(new Callback() {
                                     @Override
                                     public void onFailure(Call call, IOException e) {
-                                        //e.printStackTrace();
+                                        e.printStackTrace();
                                         readArticleResultDataCallBack.onFail("ReadArticleResult 获取失败");
                                     }
 
@@ -217,13 +220,12 @@ public class DataStore {
                                         // 使用Gson解析返回的json数据
                                         ReadArticleResult readArticleResult = gson.fromJson(result, ReadArticleResult.class);
                                         readArticleResults.add(readArticleResult);
-                                        if (readArticleResults.size() == 5)
+                                        if (readArticleResults.size() == size)
                                             readArticleResultDataCallBack.onSuccess(readArticleResults);
                                     }
                                 });
                             } else {
-                                //Log.d(TAG, "dailyBestRv bmobFile is null");
-                                readArticleResultDataCallBack.onFail("dailyBestRv bmobFile is null");
+                                readArticleResultDataCallBack.onFail("ReadArticle bmobFile is null");
                             }
                         }
                     } else {
