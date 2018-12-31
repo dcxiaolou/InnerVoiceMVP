@@ -19,6 +19,10 @@ import com.dcxiaolou.innervoicemvp.home.ReadArticleAdapter;
 import com.dcxiaolou.innervoicemvp.mode.ReadArticleResult;
 import com.dcxiaolou.innervoicemvp.utils.Constants;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +32,21 @@ import java.util.List;
 
 public class ShowReadArticleFragment8 extends Fragment implements ReadArticleFragmentContract.View {
 
+    //bmob数据查询分页
+    private int skipNum = 0;
+    //标记是否还有数据可以加载
+    private boolean haveMoreData = false;
+    //当页面可见时，初始化界面
+    private boolean init = false;
+    //是否允许加载数据
+    private boolean canLoadData = false;
+
     private ReadArticleFragmentContract.Presenter mPresenter;
 
+    private View rootView = null;
     private Handler mHandler = new Handler();
+
+    private List<ReadArticleResult> readArticleResults = new ArrayList<>();
 
     private SmartRefreshLayout smartRefreshLayout;
 
@@ -38,22 +54,84 @@ public class ShowReadArticleFragment8 extends Fragment implements ReadArticleFra
 
     private ReadArticleAdapter adapter;
 
-    @Nullable
+    /*
+     *解决ViewPager + fragment 页面切换后数据丢失，此处是让数据在相应的页面可见时加载数据
+     * 注意：setUserVisibleHint方法先与onActivityCreate方法执行
+     */
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_show_article_8, container, false);
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.d("TAG", "isVisibleToUser 8: " + isVisibleToUser);
+        //防止viewpager预加载下一个页面后（rootView != null），下一个页面无法加载数据
+        if (isVisibleToUser && (canLoadData || rootView == null )) {
+            skipNum = 0;
+            haveMoreData = true;
+            if (rootView != null) {
+                Log.d("TAG", "rootView: " + rootView);
+                init();
+            } else {
+                init = true;
+            }
+        }
     }
 
+    @Nullable
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d("TAG", "onCreateView8");
+        Log.d("TAG", "init8 = " + init);
+        if (rootView == null) {
+            canLoadData = true;
+            //当页面为空时才去加载界面，防止加载好的有数据的界面被空的新界面覆盖
+            rootView = (View) inflater.inflate(R.layout.fragment_show_article_8, container, false);
+        }
+        if (init) {
+            init();
+            init = false;
+        }
+        return rootView;
+    }
+
+    private void init() {
+        Log.d("TAG", "init: ");
+
+        canLoadData = false;
 
         mPresenter = new ReadArticleFragmentPresenter(this);
-        mPresenter.getReadArticle(Constants.READ_ARTICLE_TYPE_8, "" + 0);
 
-        showArticleItemRv = (RecyclerView) view.findViewById(R.id.show_article_item_rv_8);
-        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.fragment_show_article_8_smart_refresh_layout);
+        showArticleItemRv = (RecyclerView) rootView.findViewById(R.id.show_article_item_rv_8);
+        smartRefreshLayout = (SmartRefreshLayout) rootView.findViewById(R.id.fragment_show_article_8_smart_refresh_layout);
+        adapter = new ReadArticleAdapter(readArticleResults);
 
+        smartRefreshLayout.autoRefresh(); //首次加载自动刷新
+        smartRefreshLayout.finishRefresh(); //结束刷新
+
+        //下拉刷新
+        smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshLayout) {
+                if (haveMoreData) {
+                    readArticleResults.clear();
+                    //从bmob获取ArticleResult
+                    mPresenter.getReadArticle(Constants.READ_ARTICLE_TYPE_8, "" + skipNum);
+                } else {
+                    Toast.makeText(getContext(), "φ(>ω<*) 暂无更新", Toast.LENGTH_SHORT).show();
+                }
+                smartRefreshLayout.finishRefresh();
+            }
+        });
+        //上拉加载更多
+        smartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshLayout) {
+                if (haveMoreData) {
+                    mPresenter.getReadArticle(Constants.READ_ARTICLE_TYPE_8, "" + skipNum);
+                } else {
+                    Toast.makeText(getContext(), "φ(>ω<*) 没有更多文章了", Toast.LENGTH_SHORT).show();
+                }
+                smartRefreshLayout.finishLoadMore();
+            }
+        });
     }
 
     @Override
@@ -61,12 +139,19 @@ public class ShowReadArticleFragment8 extends Fragment implements ReadArticleFra
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                Log.d("TAG", "fragment8 readArticleResults.size() = " + data.size());
+                readArticleResults.addAll(data);
+                Log.d("TAG", "readArticleResults.size() = " + readArticleResults.size());
+                Log.d("TAG", "data.size() = " + data.size());
+                if (data.size() < 5)
+                    haveMoreData = false;
+                else
+                    skipNum += 5;
                 LinearLayoutManager manager = new LinearLayoutManager(getContext());
                 showArticleItemRv.setLayoutManager(manager);
-                adapter = new ReadArticleAdapter(data);
+                adapter = new ReadArticleAdapter(readArticleResults);
                 showArticleItemRv.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
+                showArticleItemRv.scrollToPosition(readArticleResults.size() - 5 - 1);//从新定位
             }
         });
     }

@@ -17,6 +17,7 @@ import com.dcxiaolou.innervoicemvp.R;
 import com.dcxiaolou.innervoicemvp.home.ReadArticleAdapter;
 import com.dcxiaolou.innervoicemvp.mode.ReadArticleResult;
 import com.dcxiaolou.innervoicemvp.utils.Constants;
+import com.dcxiaolou.innervoicemvp.utils.SharedPreferencesUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -31,7 +32,7 @@ import java.util.List;
 
 public class ShowReadArticleFragment2 extends Fragment implements ReadArticleFragmentContract.View {
 
-    private View rootView;
+    private View rootView = null;
 
     private ReadArticleFragmentContract.Presenter mPresenter;
 
@@ -45,19 +46,13 @@ public class ShowReadArticleFragment2 extends Fragment implements ReadArticleFra
 
     private List<ReadArticleResult> readArticleResults = new ArrayList<>();
 
-    //标记是否是第一次加载
-    private boolean isFirstLoad = true;
     //bmob数据查询分页
     private int skipNum = 0;
     //标记是否还有数据可以加载
-    private boolean haveMoreData = true;
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_show_article_2, container, false);
-        return rootView;
-    }
+    private boolean haveMoreData = false;
+    //当页面可见时，初始化界面
+    private boolean init = false;
+    private boolean canLoadData = false;
 
     /*
      *解决ViewPager + fragment 页面切换后数据丢失，此处是让数据在相应的页面中从新加载
@@ -65,27 +60,49 @@ public class ShowReadArticleFragment2 extends Fragment implements ReadArticleFra
      */
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        Log.d("TAG", "2 isVisibleToUser");
         super.setUserVisibleHint(isVisibleToUser);
-        isFirstLoad = true;
-        skipNum = 0;
-        haveMoreData = true;
+        Log.d("TAG", "isVisibleToUser 2: " + isVisibleToUser);
+        if (isVisibleToUser && (canLoadData || rootView == null)) {
+            skipNum = 0;
+            haveMoreData = true;
+            if (rootView != null) {
+                Log.d("TAG", "rootView: " + rootView);
+                init();
+            } else {
+                init = true;
+            }
+        }
+
     }
 
+    @Nullable
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d("TAG", "onCreateView2");
+        Log.d("TAG", "init2 = " + init);
+        if (rootView == null) {
+            canLoadData = true;
+            rootView = (View) inflater.inflate(R.layout.fragment_show_article_2, container, false);
+        }
+        if (init) {
+            init();
+            init = false;
+        }
+        return rootView;
+    }
+
+    private void init() {
+        Log.d("TAG", "init: ");
+
+        canLoadData = false;
 
         mPresenter = new ReadArticleFragmentPresenter(this);
 
         showArticleItemRv = (RecyclerView) rootView.findViewById(R.id.show_article_item_rv_2);
         smartRefreshLayout = (SmartRefreshLayout) rootView.findViewById(R.id.fragment_show_article_2_smart_refresh_layout);
 
-        if (isFirstLoad) {
-            smartRefreshLayout.autoRefresh(); //首次加载自动刷新
-            smartRefreshLayout.finishRefresh(); //结束刷新
-            isFirstLoad = false;
-        }
+        smartRefreshLayout.autoRefresh(); //首次加载自动刷新
+        smartRefreshLayout.finishRefresh(); //结束刷新
 
         //下拉刷新
         smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -113,7 +130,6 @@ public class ShowReadArticleFragment2 extends Fragment implements ReadArticleFra
                 smartRefreshLayout.finishLoadMore();
             }
         });
-
     }
 
     @Override
