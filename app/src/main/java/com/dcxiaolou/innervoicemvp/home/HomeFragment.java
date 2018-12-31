@@ -3,6 +3,7 @@ package com.dcxiaolou.innervoicemvp.home;
  * 主页碎片
  * */
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -16,12 +17,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dcxiaolou.innervoicemvp.R;
+import com.dcxiaolou.innervoicemvp.Read.ShowReadArticleActivity;
+import com.dcxiaolou.innervoicemvp.consult.ConsultActivity;
+import com.dcxiaolou.innervoicemvp.course.ShowCourseActivity;
 import com.dcxiaolou.innervoicemvp.data.entity.CourseGuide;
+import com.dcxiaolou.innervoicemvp.fm.ShowFMActivity;
 import com.dcxiaolou.innervoicemvp.mode.ReadArticleResult;
+import com.dcxiaolou.innervoicemvp.questionAndAnswer.ShowQuestionActivity;
+import com.dcxiaolou.innervoicemvp.text.TestActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
@@ -30,7 +38,7 @@ import com.youth.banner.loader.ImageLoader;
 
 import java.util.List;
 
-public class HomeFragment extends Fragment implements HomeContract.View, OnBannerListener {
+public class HomeFragment extends Fragment implements HomeContract.View, OnBannerListener, View.OnClickListener {
 
     private final static String TAG = "HomeFragment";
 
@@ -44,6 +52,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, OnBanne
     private RecyclerView recyclerView;
     //每日精选
     private RecyclerView dailyBestRv;
+
+    //子菜单项
+    private LinearLayout readLayout, courseLayout, fmLayout, questionAndAnswerLayout, consultLayout, testLayout;
 
     @Nullable
     @Override
@@ -65,6 +76,21 @@ public class HomeFragment extends Fragment implements HomeContract.View, OnBanne
 
         dailyBestRv = (RecyclerView) view.findViewById(R.id.daily_best);
         mPresenter.getDailyBest();
+
+        readLayout = (LinearLayout) view.findViewById(R.id.read_layout);
+        courseLayout = (LinearLayout) view.findViewById(R.id.course_layout);
+        fmLayout = (LinearLayout) view.findViewById(R.id.fm_layout);
+        questionAndAnswerLayout = (LinearLayout) view.findViewById(R.id.question_and_answer_Linear_layout);
+        consultLayout = (LinearLayout) view.findViewById(R.id.consult_linear_layout);
+        testLayout = (LinearLayout) view.findViewById(R.id.test_linear_layout);
+
+        //给子菜单项添加点击事件
+        readLayout.setOnClickListener(this);
+        courseLayout.setOnClickListener(this);
+        fmLayout.setOnClickListener(this);
+        questionAndAnswerLayout.setOnClickListener(this);
+        consultLayout.setOnClickListener(this);
+        testLayout.setOnClickListener(this);
 
     }
 
@@ -125,6 +151,38 @@ public class HomeFragment extends Fragment implements HomeContract.View, OnBanne
     @Override
     public void OnBannerClick(int position) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.read_layout:
+                Intent readIntent = new Intent(getContext(), ShowReadArticleActivity.class);
+                startActivity(readIntent);
+                break;
+            case R.id.course_layout:
+                Intent courseIntent = new Intent(getContext(), ShowCourseActivity.class);
+                startActivity(courseIntent);
+                break;
+            case R.id.fm_layout:
+                Intent fmIntent = new Intent(getContext(), ShowFMActivity.class);
+                startActivity(fmIntent);
+                break;
+            case R.id.question_and_answer_Linear_layout:
+                Intent qaaIntent = new Intent(getContext(), ShowQuestionActivity.class);
+                startActivity(qaaIntent);
+                break;
+            case R.id.consult_linear_layout:
+                Intent consultIntent = new Intent(getContext(), ConsultActivity.class);
+                startActivity(consultIntent);
+                break;
+            case R.id.test_linear_layout:
+                Intent testIntent = new Intent(getContext(), TestActivity.class);
+                startActivity(testIntent);
+                break;
+            default:
+                break;
+        }
     }
 
     //重写banner图片加载器

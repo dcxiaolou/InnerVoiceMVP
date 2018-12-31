@@ -45,8 +45,15 @@
         <activity
             android:name=".pushSecret.PushSecretActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".singIn.SingInActivity"
+        <activity
+            android:name=".singIn.SingInActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".consult.ConsultActivity" />
+        <activity android:name=".Read.ShowReadArticleActivity" />
+        <activity android:name=".course.ShowCourseActivity" />
+        <activity android:name=".fm.ShowFMActivity" />
+        <activity android:name=".questionAndAnswer.ShowQuestionActivity" />
+        <activity android:name=".text.TestActivity"></activity>
     </application>
 
 </manifest>
