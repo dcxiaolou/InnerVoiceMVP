@@ -59,7 +59,6 @@ public class CenterFragment extends Fragment implements CenterContract.View, Vie
             User user = mPresenter.getCurrentUser();
             String avatarUrl = user.getAvatar().getFileUrl();
             Glide.with(this).load(avatarUrl).into(headImageCi);
-            SharedPreferencesUtils.saveString("avatar", avatarUrl);
             userNameTv.setText(user.getUsername());
             logInOrSignIn.setText("退出登录");
         }

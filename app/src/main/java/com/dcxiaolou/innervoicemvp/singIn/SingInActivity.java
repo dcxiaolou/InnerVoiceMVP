@@ -30,6 +30,7 @@ import com.dcxiaolou.innervoicemvp.center.CenterFragment;
 import com.dcxiaolou.innervoicemvp.home.HomeActivity;
 import com.dcxiaolou.innervoicemvp.message.MessageFragment;
 import com.dcxiaolou.innervoicemvp.utils.Constants;
+import com.dcxiaolou.innervoicemvp.utils.SharedPreferencesUtils;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -137,12 +138,16 @@ public class SingInActivity extends BaseActivity implements SingInContract.View,
                 } else if (imagePath == null) {
                     Toast.makeText(this, "头像还是空的哦", Toast.LENGTH_SHORT).show();
                 } else {
+                    SharedPreferencesUtils.saveString("password", "");
+                    SharedPreferencesUtils.saveBoolean("rememberPassword", false);
+                    SharedPreferencesUtils.saveString("nickName", userName);
                     //Log.d("TAG", "imagePath2: " + imagePath);
                     final BmobFile avatar = new BmobFile(new File(imagePath));
                     //先要将文件上传，才能存入数据库
                     avatar.upload(new UploadFileListener() {
                         @Override
                         public void done(BmobException e) {
+                            SharedPreferencesUtils.saveString("avatar", avatar.getFileUrl());
                             mPresenter.singIn(phoneNumber, userName, password, avatar);
                         }
                     });

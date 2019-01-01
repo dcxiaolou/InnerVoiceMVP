@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.dcxiaolou.innervoicemvp.R;
 import com.dcxiaolou.innervoicemvp.base.BaseActivity;
 import com.dcxiaolou.innervoicemvp.home.HomeActivity;
+import com.dcxiaolou.innervoicemvp.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 
@@ -57,6 +58,14 @@ public class GuideActivity extends BaseActivity implements GuideContract.View, V
         tvIgnore = findViewById(R.id.tv_ignore);
 
         tvPrevious.setVisibility(View.GONE);
+
+        /*
+        * 初始化登录信息
+        * */
+        SharedPreferencesUtils.saveString("nickName", "");
+        SharedPreferencesUtils.saveString("password", "");
+        SharedPreferencesUtils.saveBoolean("rememberPassword", false);
+        SharedPreferencesUtils.saveString("avatar", "");
 
     }
 
