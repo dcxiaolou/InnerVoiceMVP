@@ -11,6 +11,7 @@ import com.dcxiaolou.innervoicemvp.data.entity.CourseDetail;
 import com.dcxiaolou.innervoicemvp.data.entity.CourseIntroduce;
 import com.dcxiaolou.innervoicemvp.data.entity.CourseIntroduceCatalog;
 import com.dcxiaolou.innervoicemvp.data.entity.CourseIntroduceForShow;
+import com.dcxiaolou.innervoicemvp.data.entity.FM;
 import com.dcxiaolou.innervoicemvp.mode.AnswerResult;
 import com.dcxiaolou.innervoicemvp.data.entity.CourseCollect;
 import com.dcxiaolou.innervoicemvp.data.entity.CourseGuide;
@@ -21,6 +22,7 @@ import com.dcxiaolou.innervoicemvp.mode.CourseDetailResult;
 import com.dcxiaolou.innervoicemvp.mode.CourseIntroduceCatalogResult;
 import com.dcxiaolou.innervoicemvp.data.entity.CourseIntroduceCommon;
 import com.dcxiaolou.innervoicemvp.mode.CourseIntroduceCommonResult;
+import com.dcxiaolou.innervoicemvp.mode.FMResult;
 import com.dcxiaolou.innervoicemvp.mode.QuestionResult;
 import com.dcxiaolou.innervoicemvp.mode.ReadArticleResult;
 import com.dcxiaolou.innervoicemvp.utils.Constants;
@@ -68,6 +70,8 @@ public class DataStore {
     private static DataCallBack<List<CourseIntroduceCommon>> courseIntroduceCommonDataCallBack;
 
     private static DataCallBack<String> courseDetailDataCallBack;
+
+    private static DataCallBack<List<FMResult>> fmResultDataCallBack;
 
 
     public static DataStore getINSTANCE() {
@@ -656,4 +660,5 @@ public class DataStore {
             return null;
         }
     }
+
 }

@@ -17,7 +17,6 @@ import com.dcxiaolou.innervoicemvp.R;
 import com.dcxiaolou.innervoicemvp.home.ReadArticleAdapter;
 import com.dcxiaolou.innervoicemvp.mode.ReadArticleResult;
 import com.dcxiaolou.innervoicemvp.utils.Constants;
-import com.dcxiaolou.innervoicemvp.utils.SharedPreferencesUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;

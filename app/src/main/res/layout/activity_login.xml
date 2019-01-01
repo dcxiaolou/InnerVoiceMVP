@@ -81,7 +81,8 @@
                     android:textColor="@color/white"
                     android:paddingLeft="5dp"
                     android:textSize="16sp"
-                    android:text="记住密码"/>
+                    android:text="记住密码"
+                    android:checked="false"/>
 
                 <TextView
                     android:layout_width="wrap_content"

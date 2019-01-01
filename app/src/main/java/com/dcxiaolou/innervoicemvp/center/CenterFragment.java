@@ -20,6 +20,7 @@ import com.dcxiaolou.innervoicemvp.R;
 import com.dcxiaolou.innervoicemvp.data.entity.User;
 import com.dcxiaolou.innervoicemvp.login.LoginActivity;
 import com.dcxiaolou.innervoicemvp.utils.Constants;
+import com.dcxiaolou.innervoicemvp.utils.SharedPreferencesUtils;
 
 import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -56,7 +57,9 @@ public class CenterFragment extends Fragment implements CenterContract.View, Vie
 
         if (mPresenter.isLogin()) {
             User user = mPresenter.getCurrentUser();
-            Glide.with(this).load(user.getAvatar().getFileUrl()).into(headImageCi);
+            String avatarUrl = user.getAvatar().getFileUrl();
+            Glide.with(this).load(avatarUrl).into(headImageCi);
+            SharedPreferencesUtils.saveString("avatar", avatarUrl);
             userNameTv.setText(user.getUsername());
             logInOrSignIn.setText("退出登录");
         }

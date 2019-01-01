@@ -2,6 +2,7 @@ package com.dcxiaolou.innervoicemvp.home;
 /*
  * 主页碎片
  * */
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,6 +48,11 @@ import java.util.List;
 
 public class HomeFragment extends Fragment implements HomeContract.View, OnBannerListener, View.OnClickListener {
 
+    //当页面可见时，初始化界面
+    private boolean init = false;
+    //是否允许加载数据
+    private boolean canLoadData = false;
+
     private final static String TAG = "HomeFragment";
 
     private Handler mHandler = new Handler();
@@ -72,34 +78,69 @@ public class HomeFragment extends Fragment implements HomeContract.View, OnBanne
     private boolean haveMoreData = true;
     private int skipNum = 0;
 
+    private View rootView;
+
+    /*
+     *解决ViewPager + fragment 页面切换后数据丢失，此处是让数据在相应的页面可见时加载数据
+     * 注意：setUserVisibleHint方法先与onActivityCreate方法执行
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.d("TAG", "isVisibleToUser 1: " + isVisibleToUser);
+        //防止viewpager预加载下一个页面后（rootView != null），下一个页面无法加载数据
+        if (isVisibleToUser && (canLoadData || rootView == null)) {
+            skipNum = 0;
+            haveMoreData = true;
+            if (rootView != null) {
+                Log.d("TAG", "rootView: " + rootView);
+                init();
+            } else {
+                init = true;
+            }
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        Log.d("TAG", "onCreateView1");
+        Log.d("TAG", "init1 = " + init);
+        if (rootView == null) {
+            canLoadData = true;
+            //当页面为空时才去加载界面，防止加载好的有数据的界面被空的新界面覆盖
+            rootView = (View) inflater.inflate(R.layout.fragment_home, container, false);
+        }
+        if (init) {
+            init();
+            init = false;
+        }
+        return rootView;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    private void init() {
+        Log.d("TAG", "init: ");
+
+        canLoadData = false;
 
         mPresenter = new HomePresenter(this);
 
-        mAdBanner = (Banner) view.findViewById(R.id.adbanner);
+        mAdBanner = (Banner) rootView.findViewById(R.id.adbanner);
         mPresenter.getADBanner();
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.course_recommend_rv);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.course_recommend_rv);
         mPresenter.getCourseGuides();
 
-        dailyBestRv = (RecyclerView) view.findViewById(R.id.daily_best);
+        dailyBestRv = (RecyclerView) rootView.findViewById(R.id.daily_best);
 
-        readLayout = (LinearLayout) view.findViewById(R.id.read_layout);
-        courseLayout = (LinearLayout) view.findViewById(R.id.course_layout);
-        fmLayout = (LinearLayout) view.findViewById(R.id.fm_layout);
-        questionAndAnswerLayout = (LinearLayout) view.findViewById(R.id.question_and_answer_Linear_layout);
-        consultLayout = (LinearLayout) view.findViewById(R.id.consult_linear_layout);
-        testLayout = (LinearLayout) view.findViewById(R.id.test_linear_layout);
+        readLayout = (LinearLayout) rootView.findViewById(R.id.read_layout);
+        courseLayout = (LinearLayout) rootView.findViewById(R.id.course_layout);
+        fmLayout = (LinearLayout) rootView.findViewById(R.id.fm_layout);
+        questionAndAnswerLayout = (LinearLayout) rootView.findViewById(R.id.question_and_answer_Linear_layout);
+        consultLayout = (LinearLayout) rootView.findViewById(R.id.consult_linear_layout);
+        testLayout = (LinearLayout) rootView.findViewById(R.id.test_linear_layout);
 
-        refreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smart_refresh_layout);
+        refreshLayout = (SmartRefreshLayout) rootView.findViewById(R.id.smart_refresh_layout);
 
         //给子菜单项添加点击事件
         readLayout.setOnClickListener(this);
@@ -109,12 +150,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, OnBanne
         consultLayout.setOnClickListener(this);
         testLayout.setOnClickListener(this);
 
-        //首次加载数据
-        if (isFirstLoad) {
-            refreshLayout.autoRefresh();//首次加载启动自动刷新
-            refreshLayout.finishRefresh();//结束刷新
-            isFirstLoad = false;
-        }
+        refreshLayout.autoRefresh();//首次加载启动自动刷新
+        refreshLayout.finishRefresh();//结束刷新
+        isFirstLoad = false;
 
         //刷新模块添加下拉刷新监听
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -207,8 +245,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, OnBanne
     }
 
     /*
-    * banner点击事件
-    * */
+     * banner点击事件
+     * */
     @Override
     public void OnBannerClick(int position) {
 

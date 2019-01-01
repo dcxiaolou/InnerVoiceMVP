@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--FM模块详情页滑动菜单中的的推荐-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include android:id="@+id/fm_scene_first"
+        layout="@layout/fm_scene_first"/>
+
+    <include
+        android:id="@+id/fm_scene_Rv"
+        layout="@layout/fm_scene_item"
+        android:visibility="gone"/>
+
+
+</LinearLayout>

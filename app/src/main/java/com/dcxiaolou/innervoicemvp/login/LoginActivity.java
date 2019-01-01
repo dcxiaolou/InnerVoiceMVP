@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.dcxiaolou.innervoicemvp.R;
 import com.dcxiaolou.innervoicemvp.base.BaseActivity;
 
@@ -17,6 +18,7 @@ import com.dcxiaolou.innervoicemvp.home.HomeActivity;
 import com.dcxiaolou.innervoicemvp.message.MessageFragment;
 import com.dcxiaolou.innervoicemvp.singIn.SingInActivity;
 import com.dcxiaolou.innervoicemvp.utils.Constants;
+import com.dcxiaolou.innervoicemvp.utils.SharedPreferencesUtils;
 
 import java.util.regex.Pattern;
 
@@ -38,12 +40,12 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, V
 
     private CircleImageView userImage;
     private EditText nickNameEt, passwordEt;
-    private CheckBox rememberPassword;
+    private CheckBox rememberPasswordCb;
     private TextView logIn, singIn;
 
     /*
-    * 记录来自哪个Activity
-    * */
+     * 记录来自哪个Activity
+     * */
     private String originView;
 
     @Override
@@ -59,13 +61,27 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, V
         userImage = (CircleImageView) findViewById(R.id.user_image);
         nickNameEt = (EditText) findViewById(R.id.phone_number);
         passwordEt = (EditText) findViewById(R.id.password);
-        rememberPassword = (CheckBox) findViewById(R.id.remember_password);
+        rememberPasswordCb = (CheckBox) findViewById(R.id.remember_password);
         logIn = (TextView) findViewById(R.id.log_in_Tv);
         singIn = (TextView) findViewById(R.id.sing_in_tv);
 
         Intent intent = getIntent();
         originView = intent.getStringExtra(Constants.LOGIN_DISTINGUISH_ACTIVITY);
 
+        String nickName = SharedPreferencesUtils.getString("nickName");
+        if (!nickName.equals(""))
+            nickNameEt.setText(nickName);
+        String avatar = SharedPreferencesUtils.getString("avatar");
+        if (!avatar.equals("")) {
+            Glide.with(this).load(avatar).into(userImage);
+        }
+
+        boolean isSavePassword = SharedPreferencesUtils.getBoolean("rememberPassword");
+        if (isSavePassword) {
+            String password = SharedPreferencesUtils.getString("password");
+            rememberPasswordCb.setChecked(true);
+            passwordEt.setText(password);
+        }
     }
 
     @Override
@@ -101,12 +117,19 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, V
             case R.id.log_in_Tv:
                 final String nickName = nickNameEt.getText().toString().trim();
                 final String password = passwordEt.getText().toString().trim();
-                Log.d("TAG", password);
                 if ("".equals(nickName.trim())) {
                     Toast.makeText(this, "请输入昵称", Toast.LENGTH_SHORT).show();
                 } else if (password.equals("") || !Pattern.matches(REGEX_PASSWORD, password)) {
                     Toast.makeText(this, "请输入正确的密码", Toast.LENGTH_SHORT).show();
                 } else {
+                    SharedPreferencesUtils.saveString("nickName", nickName);
+                    if (rememberPasswordCb.isChecked()) {
+                        SharedPreferencesUtils.saveString("password", password);
+                        SharedPreferencesUtils.saveBoolean("rememberPassword", true);
+                    } else {
+                        SharedPreferencesUtils.saveString("password", "");
+                        SharedPreferencesUtils.saveBoolean("rememberPassword", false);
+                    }
                     mPresenter.login(nickName, password);
                 }
                 break;
