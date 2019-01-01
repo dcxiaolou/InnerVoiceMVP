@@ -1,4 +1,4 @@
-package com.dcxiaolou.innervoicemvp.home;
+package com.dcxiaolou.innervoicemvp.course;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
-* 课程推荐模块的适配器
+* 课程模块的适配器
 * */
 
-public class CourseIntroduceAdapter extends RecyclerView.Adapter<CourseIntroduceAdapter.ViewHolder> {
+public class ShowCourseAdapter extends RecyclerView.Adapter<ShowCourseAdapter.ViewHolder> {
 
     private List<CourseGuide> courseGuides = new ArrayList<>();
 
@@ -42,14 +42,14 @@ public class CourseIntroduceAdapter extends RecyclerView.Adapter<CourseIntroduce
         }
     }
 
-    public CourseIntroduceAdapter(List<CourseGuide> courseGuides) {
+    public ShowCourseAdapter(List<CourseGuide> courseGuides) {
         this.courseGuides = courseGuides;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.course_guide_item, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.show_course_item, viewGroup, false);
         final ViewHolder holder = new ViewHolder(view);
         holder.courseItemCardView.setOnClickListener(new View.OnClickListener() {
             @Override

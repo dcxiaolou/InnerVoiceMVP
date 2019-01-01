@@ -69,7 +69,12 @@
         <activity
             android:name=".Read.showArticleAndCommon.ShowArticleAndCommonActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".questionAndAnswer.showQuestionAndAnswer.ShowQuestionAndAnswerActivity"
+        <activity
+            android:name=".questionAndAnswer.showQuestionAndAnswer.ShowQuestionAndAnswerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".course.ShowCourseIntroduce.ShowCourseIntroduceActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".course.coursePlay.CoursePlayActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
