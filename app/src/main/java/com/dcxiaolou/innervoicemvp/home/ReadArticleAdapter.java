@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dcxiaolou.innervoicemvp.R;
+import com.dcxiaolou.innervoicemvp.Read.showArticleAndCommon.ShowArticleAndCommonActivity;
 import com.dcxiaolou.innervoicemvp.mode.ReadArticleResult;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public class ReadArticleAdapter extends RecyclerView.Adapter<ReadArticleAdapter.
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.show_article_introduce_item, viewGroup, false);
         final ViewHolder holder = new ViewHolder(view);
         //添加点击事件，用于跳转到文章的详情页
-        /*holder.dailyBestCv.setOnClickListener(new View.OnClickListener() {
+        holder.dailyBestCv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
@@ -68,7 +69,7 @@ public class ReadArticleAdapter extends RecyclerView.Adapter<ReadArticleAdapter.
                 intent.putExtra(ShowArticleAndCommonActivity.ARTICLE_DETAIL, articleResult);
                 viewGroup.getContext().startActivity(intent);
             }
-        });*/
+        });
 
         return holder;
     }

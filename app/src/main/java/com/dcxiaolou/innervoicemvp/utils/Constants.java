@@ -53,4 +53,14 @@ public class Constants {
     public static final String READ_ARTICLE_TYPE_7 = "823";
     public static final String READ_ARTICLE_TYPE_8 = "844";
 
+    /*
+    * 问答模块
+    * 全部
+    * 最新
+    * 最热
+    * */
+    public static final String QUESTION_ALL_LIMIT_NUM = "5";
+    public static final String QUESTION_LATEST_LIMIT_NUM = "10";
+    public static final String QUESTION_HOT_LIMIT_NUM = "10";
+
 }

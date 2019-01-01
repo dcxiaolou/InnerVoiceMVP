@@ -48,17 +48,28 @@
         <activity
             android:name=".singIn.SingInActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".consult.ConsultActivity"
+        <activity
+            android:name=".consult.ConsultActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".Read.ShowReadArticleActivity"
+        <activity
+            android:name=".Read.ShowReadArticleActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".course.ShowCourseActivity"
+        <activity
+            android:name=".course.ShowCourseActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".fm.ShowFMActivity"
+        <activity
+            android:name=".fm.ShowFMActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".questionAndAnswer.ShowQuestionActivity"
+        <activity
+            android:name=".questionAndAnswer.ShowQuestionActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".test.TestActivity"
+        <activity
+            android:name=".test.TestActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Read.showArticleAndCommon.ShowArticleAndCommonActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".questionAndAnswer.showQuestionAndAnswer.ShowQuestionAndAnswerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 

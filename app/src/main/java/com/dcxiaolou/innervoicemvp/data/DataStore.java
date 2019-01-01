@@ -4,10 +4,14 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.dcxiaolou.innervoicemvp.data.entity.ADBanner;
+import com.dcxiaolou.innervoicemvp.data.entity.Answer;
+import com.dcxiaolou.innervoicemvp.mode.AnswerResult;
 import com.dcxiaolou.innervoicemvp.data.entity.CourseCollect;
 import com.dcxiaolou.innervoicemvp.data.entity.CourseGuide;
+import com.dcxiaolou.innervoicemvp.data.entity.Question;
 import com.dcxiaolou.innervoicemvp.data.entity.ReadArticle;
 import com.dcxiaolou.innervoicemvp.data.entity.User;
+import com.dcxiaolou.innervoicemvp.mode.QuestionResult;
 import com.dcxiaolou.innervoicemvp.mode.ReadArticleResult;
 import com.dcxiaolou.innervoicemvp.utils.Constants;
 import com.google.gson.Gson;
@@ -16,7 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
@@ -43,6 +46,11 @@ public class DataStore {
     private static DataCallBack<List<CourseGuide>> courseGuideDataCallBack;
 
     private static DataCallBack<List<ReadArticleResult>> readArticleResultDataCallBack;
+
+    private static DataCallBack<List<QuestionResult>> questionResultDataCallBack;
+
+    private static DataCallBack<List<AnswerResult>> ansertResultDataCallBack;
+
 
     public static DataStore getINSTANCE() {
         return INSTANCE;
@@ -231,6 +239,141 @@ public class DataStore {
                     } else {
                         e.printStackTrace();
                         readArticleResultDataCallBack.onFail("ReadArticle 获取失败");
+                    }
+                }
+            });
+            return null;
+        }
+    }
+
+    /*
+    * 问答模块 问题信息的获取
+    * */
+    public void getQuestion(final DataCallBack<List<QuestionResult>> callBack, String limitNum, String skipNum) {
+        questionResultDataCallBack = callBack;
+        new getQuestionTask().execute(limitNum, skipNum);
+    }
+
+    private static class getQuestionTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            final List<QuestionResult> questionResults = new ArrayList<>();
+            BmobQuery<Question> query = new BmobQuery<>();
+            query.addQueryKeys("question");
+            query.setLimit(Integer.parseInt(strings[0])); // 返回5条数据
+            query.setSkip(Integer.parseInt(strings[1])); //每次跳过的数据项，即分页
+            query.order("-createdAt");
+            query.findObjects(new FindListener<Question>() {
+                @Override
+                public void done(List<Question> list, BmobException e) {
+                    if (e == null) {
+                        final int size = list.size();
+                        Log.d("TAG", "Question size = " + size);
+                        BmobFile file;
+                        final Gson gson = new Gson();
+                        for (Question question : list) {
+                            file = question.getQuestion();
+                            final String idStr = ", \"id\": \"" + file.getFilename() + "\"";
+                            //Log.d("TAG", "idStr = " + idStr);
+                            if (file != null) {
+                                String fileUrl = file.getUrl();
+                                // 使用okhttp获取相应得文章
+                                OkHttpClient client = new OkHttpClient();
+                                Request request = new Request.Builder().url(fileUrl).build();
+                                client.newCall(request).enqueue(new Callback() {
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        e.printStackTrace();
+                                        questionResultDataCallBack.onFail("QuestionResult 获取失败");
+                                    }
+
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException {
+                                        String result = response.body().string();
+                                        String newResult = "";
+                                        for (int i = 0; i < result.indexOf('}'); i++)
+                                            newResult += result.charAt(i);
+                                        //Log.d("TAG", newResult);
+                                        newResult += idStr + "}";
+                                        //Log.d("TAG", newResult);
+                                        // 使用Gson解析返回的json数据
+                                        QuestionResult questionResult = gson.fromJson(newResult, QuestionResult.class);
+                                        questionResults.add(questionResult);
+                                        if (questionResults.size() == size)
+                                            questionResultDataCallBack.onSuccess(questionResults);
+                                    }
+                                });
+                            } else {
+                                questionResultDataCallBack.onFail("Question bmobFile is null");
+                            }
+                        }
+                    } else {
+                        e.printStackTrace();
+                        questionResultDataCallBack.onFail("Question 获取失败");
+                    }
+                }
+            });
+            return null;
+        }
+    }
+
+    /*
+     * 问答模块 回答信息的获取
+     * */
+    public void getAnsewr(final DataCallBack<List<AnswerResult>> callBack, String type) {
+        ansertResultDataCallBack = callBack;
+        new getAnswerTask().execute(type);
+    }
+
+    private static class getAnswerTask extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... strings) {
+            final List<AnswerResult> answerResults = new ArrayList<>();
+            BmobQuery<Answer> query = new BmobQuery<>();
+            query.addQueryKeys("answer");
+            query.addWhereEqualTo("type", strings[0]);
+            query.setLimit(100);
+            query.order("-createdAt");
+            query.findObjects(new FindListener<Answer>() {
+                @Override
+                public void done(List<Answer> list, BmobException e) {
+                    if (e == null) {
+                        final int size = list.size();
+                        Log.d("TAG", "Answer size = " + size);
+                        BmobFile file;
+                        final Gson gson = new Gson();
+                        for (Answer answer : list) {
+                            file = answer.getAnswer();
+                            if (file != null) {
+                                String fileUrl = file.getUrl();
+                                // 使用okhttp获取相应得文章
+                                OkHttpClient client = new OkHttpClient();
+                                Request request = new Request.Builder().url(fileUrl).build();
+                                client.newCall(request).enqueue(new Callback() {
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        e.printStackTrace();
+                                        ansertResultDataCallBack.onFail("AnswerResult 获取失败");
+                                    }
+
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException {
+                                        String result = response.body().string();
+                                        // 使用Gson解析返回的json数据
+                                        AnswerResult answerResult = gson.fromJson(result, AnswerResult.class);
+                                        answerResults.add(answerResult);
+                                        if (answerResults.size() == size)
+                                            ansertResultDataCallBack.onSuccess(answerResults);
+                                    }
+                                });
+                            } else {
+                                ansertResultDataCallBack.onFail("Question bmobFile is null");
+                            }
+                        }
+                    } else {
+                        e.printStackTrace();
+                        ansertResultDataCallBack.onFail("Question 获取失败");
                     }
                 }
             });
