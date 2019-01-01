@@ -96,10 +96,12 @@ public class SingInActivity extends BaseActivity implements SingInContract.View,
         if (originView.equals(CenterFragment.class.getName())) {
             intent = new Intent(this, HomeActivity.class);
             intent.putExtra(Constants.HOMEACTIVITY_DISTINGUISH_PAGEVIEW, 3);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         } else if (originView.equals(MessageFragment.class.getName())) {
             intent = new Intent(this, HomeActivity.class);
             intent.putExtra(Constants.HOMEACTIVITY_DISTINGUISH_PAGEVIEW, 2);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
         finish();

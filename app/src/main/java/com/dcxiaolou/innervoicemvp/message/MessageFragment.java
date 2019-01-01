@@ -47,6 +47,7 @@ public class MessageFragment extends Fragment implements MessageContract.View {
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), LoginActivity.class);
                     intent.putExtra(Constants.LOGIN_DISTINGUISH_ACTIVITY, MessageFragment.class.getName());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }
             });

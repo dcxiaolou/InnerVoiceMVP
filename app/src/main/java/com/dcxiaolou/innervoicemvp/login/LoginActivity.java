@@ -97,10 +97,12 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, V
         if (originView.equals(CenterFragment.class.getName())) {
             originViewIntent = new Intent(this, HomeActivity.class);
             originViewIntent.putExtra(Constants.HOMEACTIVITY_DISTINGUISH_PAGEVIEW, 3);
+            originViewIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(originViewIntent);
         } else if (originView.equals(MessageFragment.class.getName())) {
             originViewIntent = new Intent(this, HomeActivity.class);
             originViewIntent.putExtra(Constants.HOMEACTIVITY_DISTINGUISH_PAGEVIEW, 2);
+            originViewIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(originViewIntent);
         }
         finish();
